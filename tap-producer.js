@@ -102,11 +102,15 @@ function encodeResult (res, count, diag) {
   var d = {}
     , dc = 0
   Object.keys(res).filter(function (k) {
-    return k !== "ok" && k !== "name" && k !== "id"
+    return k !== "ok" && k !== "name" && k !== "id" && k !== 'stack'  //moving stack to end
   }).forEach(function (k) {
     dc ++
     d[k] = res[k]
   })
+  if (res.stack) { //if stack, add to end, otherwise yamlish.encode truncates valuable data
+    dc ++
+    d.stack = res.stack
+  }
   //console.error(d, "about to encode")
   if (dc > 0) output += "  ---"+yamlish.encode(d)+"\n  ...\n"
   return output
